@@ -13,6 +13,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.12"
 files = ["app"]
+plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
 module = "app.domain.*"
