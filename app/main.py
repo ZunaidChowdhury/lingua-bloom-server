@@ -10,15 +10,26 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.api.routes.health import router as health_router
+from app.api.routes.slice import router as slice_router
 from app.core.config import Settings, get_settings
 from app.core.errors import register_exception_handlers
 from app.core.logging import configure_logging
 from app.core.middleware import RequestContextMiddleware
+from app.llm.client import GroqClient
 
 
 @asynccontextmanager
-async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
-    yield
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    resolved: Settings = app.state.settings
+    app.state.llm = GroqClient(
+        api_key=resolved.groq_api_key,
+        model=resolved.groq_model,
+        timeout_s=resolved.llm_timeout_s,
+    )
+    try:
+        yield
+    finally:
+        await app.state.llm.close()
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -40,6 +51,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     register_exception_handlers(app)
     app.include_router(health_router)
+    app.include_router(slice_router)
     return app
 
 
