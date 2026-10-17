@@ -8,15 +8,22 @@ from dataclasses import replace
 from datetime import UTC, datetime
 
 from app.repositories.base import (
+    TURN_STATE_ATTEMPTS,
+    TURN_STATE_MESSAGES,
+    TURN_STATE_WINS,
     AttemptRecord,
     LevelEventRecord,
     MessageRecord,
     NewAttempt,
     NewMessage,
     NewSession,
+    RecentWin,
     SessionRecord,
     TurnCommit,
+    TurnState,
     UnknownSessionError,
+    accuracy_ratio,
+    relative_day_label,
 )
 
 
@@ -203,3 +210,54 @@ class InMemoryRepository:
             del self._attempts[attempts_len:]
             del self._level_events[events_len:]
             raise
+
+    async def get_turn_state(self, session_id: uuid.UUID) -> TurnState | None:
+        session = self._sessions.get(session_id)
+        if session is None:
+            return None
+
+        messages = tuple(
+            message for message in self._messages if message.session_id == session_id
+        )[-TURN_STATE_MESSAGES:]
+        recent_attempts = tuple(
+            attempt
+            for attempt in self._attempts
+            if attempt.session_id == session_id
+            and attempt.level == session.level
+            and attempt.counted
+        )[-TURN_STATE_ATTEMPTS:]
+
+        counts: dict[str, list[int]] = {}
+        for attempt in self._attempts:
+            if attempt.session_id == session_id and attempt.counted:
+                bucket = counts.setdefault(attempt.skill_tag, [0, 0])
+                bucket[0] += 1 if attempt.result == "correct" else 0
+                bucket[1] += 1
+        skill_accuracy = {
+            skill: accuracy_ratio(correct, total)
+            for skill, (correct, total) in counts.items()
+        }
+
+        correct = [
+            attempt
+            for attempt in self._attempts
+            if attempt.session_id == session_id
+            and attempt.counted
+            and attempt.result == "correct"
+        ][-TURN_STATE_WINS:][::-1]
+        now = self._now()
+        recent_wins = tuple(
+            RecentWin(
+                item_id=attempt.item_id,
+                day_label=relative_day_label(attempt.created_at, now),
+            )
+            for attempt in correct
+        )
+
+        return TurnState(
+            session=session,
+            messages=messages,
+            recent_attempts=recent_attempts,
+            skill_accuracy=skill_accuracy,
+            recent_wins=recent_wins,
+        )

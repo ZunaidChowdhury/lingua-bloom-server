@@ -18,6 +18,7 @@ class Settings(BaseSettings):
 
     groq_api_key: str
     database_url: str
+    test_database_url: str | None = None
 
     groq_model: str = "llama-3.1-8b-instant"
     frontend_origin: str = "http://localhost:3000"

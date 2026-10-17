@@ -15,6 +15,10 @@ Role = Literal["child", "bot"]
 ModeName = Literal["learning", "conversation", "engagement", "support"]
 AttemptResultName = Literal["correct", "incorrect", "unsure", "skipped", "revealed"]
 
+TURN_STATE_MESSAGES = 6
+TURN_STATE_ATTEMPTS = 5
+TURN_STATE_WINS = 3
+
 
 class UnknownSessionError(LookupError):
     """Raised when a write targets a session that does not exist."""
@@ -122,6 +126,36 @@ class TurnCommit:
     level_events: tuple[NewLevelEvent, ...] = ()
 
 
+@dataclass(frozen=True)
+class RecentWin:
+    item_id: str
+    day_label: str
+
+
+@dataclass(frozen=True)
+class TurnState:
+    session: SessionRecord
+    messages: tuple[MessageRecord, ...]
+    recent_attempts: tuple[AttemptRecord, ...]
+    skill_accuracy: dict[str, float]
+    recent_wins: tuple[RecentWin, ...]
+
+
+def accuracy_ratio(correct: int, total: int) -> float:
+    if total <= 0:
+        return 0.0
+    return correct / total
+
+
+def relative_day_label(created_at: datetime, now: datetime) -> str:
+    days = (now.date() - created_at.date()).days
+    if days <= 0:
+        return "today"
+    if days == 1:
+        return "yesterday"
+    return f"{days} days ago"
+
+
 class SessionRepository(Protocol):
     async def create_session(self, new: NewSession) -> SessionRecord: ...
 
@@ -168,12 +202,17 @@ class TurnRepository(Protocol):
     async def persist_turn(self, commit: TurnCommit) -> None: ...
 
 
+class TurnStateRepository(Protocol):
+    async def get_turn_state(self, session_id: uuid.UUID) -> TurnState | None: ...
+
+
 class Repository(
     SessionRepository,
     MessageRepository,
     AttemptRepository,
     LevelEventRepository,
     TurnRepository,
+    TurnStateRepository,
     Protocol,
 ):
     """The full storage contract implemented by every backend."""

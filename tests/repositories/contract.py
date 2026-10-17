@@ -211,3 +211,64 @@ class RepositoryContract:
             await repository.persist_turn(
                 TurnCommit(session_id=uuid.uuid4(), session=_update())
             )
+
+    async def test_turn_state_empty(self, repository: Repository) -> None:
+        session = await _create(repository)
+        state = await repository.get_turn_state(session.id)
+        assert state is not None
+        assert state.session == session
+        assert state.messages == ()
+        assert state.recent_attempts == ()
+        assert state.skill_accuracy == {}
+        assert state.recent_wins == ()
+
+    async def test_turn_state_missing_returns_none(self, repository: Repository) -> None:
+        assert await repository.get_turn_state(uuid.uuid4()) is None
+
+    async def test_turn_state_populated(self, repository: Repository) -> None:
+        session = await _create(repository)
+        await repository.persist_turn(
+            TurnCommit(
+                session_id=session.id,
+                session=_update(level=2),
+                messages=(
+                    NewMessage(role="child", content="hi"),
+                    NewMessage(role="bot", content="hello", mode="learning"),
+                ),
+                attempts=(
+                    NewAttempt(
+                        item_id="l2-a",
+                        level=2,
+                        skill_tag="animals",
+                        attempt_no=1,
+                        result="correct",
+                        counted=True,
+                    ),
+                    NewAttempt(
+                        item_id="l2-b",
+                        level=2,
+                        skill_tag="colors",
+                        attempt_no=1,
+                        result="incorrect",
+                        counted=True,
+                    ),
+                    NewAttempt(
+                        item_id="l1-c",
+                        level=1,
+                        skill_tag="animals",
+                        attempt_no=1,
+                        result="correct",
+                        counted=True,
+                    ),
+                ),
+            )
+        )
+        state = await repository.get_turn_state(session.id)
+        assert state is not None
+        assert state.session.level == 2
+        assert [message.content for message in state.messages] == ["hi", "hello"]
+        assert [attempt.item_id for attempt in state.recent_attempts] == ["l2-a", "l2-b"]
+        assert state.skill_accuracy["animals"] == pytest.approx(1.0)
+        assert state.skill_accuracy["colors"] == pytest.approx(0.0)
+        assert [win.item_id for win in state.recent_wins] == ["l1-c", "l2-a"]
+        assert all(win.day_label == "today" for win in state.recent_wins)

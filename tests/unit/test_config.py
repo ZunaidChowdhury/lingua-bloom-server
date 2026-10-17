@@ -17,6 +17,7 @@ def test_documented_defaults() -> None:
     assert settings.frontend_origin == "http://localhost:3000"
     assert settings.log_level == "INFO"
     assert settings.admin_key is None
+    assert settings.test_database_url is None
     assert settings.llm_timeout_s == 1.5
     assert settings.progress_window == 5
     assert settings.progress_required_correct == 4
