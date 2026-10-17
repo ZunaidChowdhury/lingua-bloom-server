@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from pathlib import Path
 
 from pydantic import ValidationError
@@ -88,3 +89,18 @@ def load_curriculum(data_dir: Path | None = None) -> dict[int, list[Item]]:
 
     base = data_dir or (Path(__file__).parent / "data")
     return {level: load_level(base / name, level) for level, name in LEVEL_FILES.items()}
+
+
+@lru_cache(maxsize=1)
+def get_curriculum_index(data_dir: Path | None = None) -> dict[str, Item]:
+    """Return a flat mapping of item_id -> Item across all curriculum levels."""
+
+    bank = load_curriculum(data_dir=data_dir)
+    return {item.id: item for items in bank.values() for item in items}
+
+
+def get_item_by_id(item_id: str, data_dir: Path | None = None) -> Item | None:
+    """Retrieve a single curriculum item by id across all loaded levels."""
+
+    return get_curriculum_index(data_dir=data_dir).get(item_id)
+
