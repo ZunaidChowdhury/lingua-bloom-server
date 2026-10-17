@@ -1,0 +1,50 @@
+{
+  "l3-desc-cat": {
+    "pass": ["The cat is big and soft.", "A small kitten is here."],
+    "fail": ["The dog is big.", "A cat."]
+  },
+  "l3-desc-dog": {
+    "pass": ["The dog is black and fast.", "My puppy is golden and small."],
+    "fail": ["The dog is fast.", "A golden cat."]
+  },
+  "l3-desc-apple": {
+    "pass": ["The apple is red and round.", "I have a green apple."],
+    "fail": ["The banana is red.", "An apple."]
+  },
+  "l3-desc-ball": {
+    "pass": ["The ball is round and red.", "My ball is a circle."],
+    "fail": ["The ball is heavy.", "A round toy."]
+  },
+  "l3-desc-sun": {
+    "pass": ["The sun is hot and bright.", "The warm sun is up."],
+    "fail": ["The moon is hot.", "The sun."]
+  },
+  "l3-desc-flower": {
+    "pass": ["The flower is pink and pretty.", "A red rose is here."],
+    "fail": ["The flower is tall.", "A red car."]
+  },
+  "l3-build-happy": {
+    "pass": ["I am happy today at school.", "The happy dog runs fast."],
+    "fail": ["I am sad.", "Happy."]
+  },
+  "l3-build-park": {
+    "pass": ["We play at the park.", "The park is fun and big."],
+    "fail": ["We play outside.", "Park."]
+  },
+  "l3-build-jump": {
+    "pass": ["I can jump very high.", "The frog can jump far."],
+    "fail": ["I can run fast.", "Jump."]
+  },
+  "l3-build-friend": {
+    "pass": ["My friend is kind to me.", "I play with my friend."],
+    "fail": ["My teacher is kind.", "Friend."]
+  },
+  "l3-dialog-hello": {
+    "pass": ["Hello, friend!", "Hi there!"],
+    "fail": ["Goodbye.", "Bye."]
+  },
+  "l3-dialog-thanks": {
+    "pass": ["Thank you so much!", "Thanks, friend!"],
+    "fail": ["Hello there.", "Please."]
+  }
+}
