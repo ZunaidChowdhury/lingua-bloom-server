@@ -1,0 +1,338 @@
+[
+  {
+    "id": "l2-verbs-run",
+    "level": 2,
+    "skill": "verbs",
+    "type": "choice",
+    "prompt": "Which word means moving fast on your feet?",
+    "emoji": "🏃",
+    "choices": [
+      {"id": "a", "label": "Run"},
+      {"id": "b", "label": "Sleep"},
+      {"id": "c", "label": "Sit"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["run"]},
+    "hint": "You do this in a race.",
+    "reveal": "Run means moving fast."
+  },
+  {
+    "id": "l2-verbs-eat",
+    "level": 2,
+    "skill": "verbs",
+    "type": "fill_blank",
+    "prompt": "I ___ my lunch at noon.",
+    "emoji": "🍽️",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["eat"]},
+    "hint": "You do this with food.",
+    "reveal": "I eat my lunch at noon."
+  },
+  {
+    "id": "l2-verbs-jump",
+    "level": 2,
+    "skill": "verbs",
+    "type": "word",
+    "prompt": "Type the word for hopping up high.",
+    "emoji": "🦘",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["jump"]},
+    "hint": "Rabbits do this.",
+    "reveal": "Jump means to hop up."
+  },
+  {
+    "id": "l2-verbs-sleep",
+    "level": 2,
+    "skill": "verbs",
+    "type": "choice",
+    "prompt": "What do you do at night in bed?",
+    "emoji": "🛏️",
+    "choices": [
+      {"id": "a", "label": "Sleep"},
+      {"id": "b", "label": "Run"},
+      {"id": "c", "label": "Swim"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["sleep"]},
+    "hint": "Your eyes close.",
+    "reveal": "You sleep at night."
+  },
+  {
+    "id": "l2-verbs-write",
+    "level": 2,
+    "skill": "verbs",
+    "type": "fill_blank",
+    "prompt": "I ___ my name with a pen.",
+    "emoji": "✍️",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["write"]},
+    "hint": "You use paper and a pencil.",
+    "reveal": "I write my name with a pen."
+  },
+  {
+    "id": "l2-verbs-sing",
+    "level": 2,
+    "skill": "verbs",
+    "type": "word",
+    "prompt": "Type the word for music with your voice.",
+    "emoji": "🎤",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["sing"]},
+    "hint": "You do this to a song.",
+    "reveal": "Sing means to make music."
+  },
+  {
+    "id": "l2-sentences-cat-mat",
+    "level": 2,
+    "skill": "simple_sentences",
+    "type": "choice",
+    "prompt": "Which sentence is correct?",
+    "emoji": "📖",
+    "choices": [
+      {"id": "a", "label": "The cat sits on the mat."},
+      {"id": "b", "label": "Cat the on mat sits."},
+      {"id": "c", "label": "Sits mat the cat on."}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": []},
+    "hint": "Start with the naming word.",
+    "reveal": "The cat sits on the mat."
+  },
+  {
+    "id": "l2-sentences-fish-swim",
+    "level": 2,
+    "skill": "simple_sentences",
+    "type": "fill_blank",
+    "prompt": "The fish ___ in the water.",
+    "emoji": "🐟",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["swims", "swim"]},
+    "hint": "It moves through the water.",
+    "reveal": "The fish swims in the water."
+  },
+  {
+    "id": "l2-sentences-dog-bark",
+    "level": 2,
+    "skill": "simple_sentences",
+    "type": "choice",
+    "prompt": "What does the dog do?",
+    "emoji": "🐕",
+    "choices": [
+      {"id": "a", "label": "The dog barks."},
+      {"id": "b", "label": "The dog flies."},
+      {"id": "c", "label": "The dog reads."}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["barks"]},
+    "hint": "Dogs say woof.",
+    "reveal": "The dog barks."
+  },
+  {
+    "id": "l2-sentences-sun-shines",
+    "level": 2,
+    "skill": "simple_sentences",
+    "type": "fill_blank",
+    "prompt": "The sun ___ in the sky.",
+    "emoji": "☀️",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["shines"]},
+    "hint": "It gives us light.",
+    "reveal": "The sun shines in the sky."
+  },
+  {
+    "id": "l2-sentences-bird-flies",
+    "level": 2,
+    "skill": "simple_sentences",
+    "type": "choice",
+    "prompt": "Which sentence uses 'flies'?",
+    "emoji": "🐦",
+    "choices": [
+      {"id": "a", "label": "The bird flies high."},
+      {"id": "b", "label": "The bird fly high."},
+      {"id": "c", "label": "The bird flying high."}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": []},
+    "hint": "One bird, so add s.",
+    "reveal": "The bird flies high."
+  },
+  {
+    "id": "l2-sentences-i-am",
+    "level": 2,
+    "skill": "simple_sentences",
+    "type": "fill_blank",
+    "prompt": "I ___ happy today.",
+    "emoji": "😊",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["am"]},
+    "hint": "Use 'am' with 'I'.",
+    "reveal": "I am happy today."
+  },
+  {
+    "id": "l2-opposites-hot-cold",
+    "level": 2,
+    "skill": "opposites",
+    "type": "choice",
+    "prompt": "What is the opposite of hot?",
+    "emoji": "🔥",
+    "choices": [
+      {"id": "a", "label": "Cold"},
+      {"id": "b", "label": "Warm"},
+      {"id": "c", "label": "Big"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["cold"]},
+    "hint": "Ice is like this.",
+    "reveal": "The opposite of hot is cold."
+  },
+  {
+    "id": "l2-opposites-up-down",
+    "level": 2,
+    "skill": "opposites",
+    "type": "word",
+    "prompt": "Type the opposite of up.",
+    "emoji": "⬆️",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["down"]},
+    "hint": "It points to the floor.",
+    "reveal": "The opposite of up is down."
+  },
+  {
+    "id": "l2-opposites-big-small",
+    "level": 2,
+    "skill": "opposites",
+    "type": "choice",
+    "prompt": "What is the opposite of big?",
+    "emoji": "🐘",
+    "choices": [
+      {"id": "a", "label": "Small"},
+      {"id": "b", "label": "Tall"},
+      {"id": "c", "label": "Fast"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["small"]},
+    "hint": "A mouse is this size.",
+    "reveal": "The opposite of big is small."
+  },
+  {
+    "id": "l2-opposites-day-night",
+    "level": 2,
+    "skill": "opposites",
+    "type": "fill_blank",
+    "prompt": "The opposite of day is ___.",
+    "emoji": "🌙",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["night"]},
+    "hint": "You sleep then.",
+    "reveal": "The opposite of day is night."
+  },
+  {
+    "id": "l2-opposites-open-close",
+    "level": 2,
+    "skill": "opposites",
+    "type": "word",
+    "prompt": "Type the opposite of open.",
+    "emoji": "🚪",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["close", "shut"]},
+    "hint": "You do this to a door at night.",
+    "reveal": "The opposite of open is close."
+  },
+  {
+    "id": "l2-opposites-happy-sad",
+    "level": 2,
+    "skill": "opposites",
+    "type": "choice",
+    "prompt": "What is the opposite of happy?",
+    "emoji": "🙂",
+    "choices": [
+      {"id": "a", "label": "Sad"},
+      {"id": "b", "label": "Angry"},
+      {"id": "c", "label": "Silly"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["sad"]},
+    "hint": "It is a quiet, blue feeling.",
+    "reveal": "The opposite of happy is sad."
+  },
+  {
+    "id": "l2-comp-tomato",
+    "level": 2,
+    "skill": "comprehension",
+    "type": "choice",
+    "prompt": "Sam has a red tomato. What color is it?",
+    "emoji": "🍅",
+    "choices": [
+      {"id": "a", "label": "Red"},
+      {"id": "b", "label": "Blue"},
+      {"id": "c", "label": "Green"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["red"]},
+    "hint": "The answer is in the first sentence.",
+    "reveal": "The tomato is red."
+  },
+  {
+    "id": "l2-comp-three-cats",
+    "level": 2,
+    "skill": "comprehension",
+    "type": "choice",
+    "prompt": "Mia sees three cats. How many cats?",
+    "emoji": "🐱",
+    "choices": [
+      {"id": "a", "label": "Three"},
+      {"id": "b", "label": "Two"},
+      {"id": "c", "label": "Four"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["three"]},
+    "hint": "Count the cats.",
+    "reveal": "Mia sees three cats."
+  },
+  {
+    "id": "l2-comp-rain",
+    "level": 2,
+    "skill": "comprehension",
+    "type": "fill_blank",
+    "prompt": "It is raining. I need my ___.",
+    "emoji": "🌧️",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["umbrella"]},
+    "hint": "It keeps you dry.",
+    "reveal": "You need an umbrella."
+  },
+  {
+    "id": "l2-comp-hungry",
+    "level": 2,
+    "skill": "comprehension",
+    "type": "choice",
+    "prompt": "Ben is hungry. What does he want?",
+    "emoji": "🍞",
+    "choices": [
+      {"id": "a", "label": "Food"},
+      {"id": "b", "label": "A pillow"},
+      {"id": "c", "label": "A ball"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["food"]},
+    "hint": "Hungry means you need to eat.",
+    "reveal": "Ben wants food."
+  },
+  {
+    "id": "l2-comp-cold",
+    "level": 2,
+    "skill": "comprehension",
+    "type": "fill_blank",
+    "prompt": "It is cold outside. Put on your ___.",
+    "emoji": "🧥",
+    "choices": [],
+    "answer": {"choice_id": null, "accepted_words": ["coat", "jacket"]},
+    "hint": "It keeps you warm.",
+    "reveal": "You put on your coat."
+  },
+  {
+    "id": "l2-comp-lost-toy",
+    "level": 2,
+    "skill": "comprehension",
+    "type": "choice",
+    "prompt": "Ana lost her toy. How does she feel?",
+    "emoji": "🧸",
+    "choices": [
+      {"id": "a", "label": "Sad"},
+      {"id": "b", "label": "Happy"},
+      {"id": "c", "label": "Sleepy"}
+    ],
+    "answer": {"choice_id": "a", "accepted_words": ["sad"]},
+    "hint": "She cannot find it.",
+    "reveal": "Ana feels sad."
+  }
+]
