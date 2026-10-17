@@ -17,6 +17,7 @@ def test_documented_defaults() -> None:
     assert settings.frontend_origin == "http://localhost:3000"
     assert settings.log_level == "INFO"
     assert settings.admin_key is None
+    assert settings.test_database_url is None
     assert settings.llm_timeout_s == 1.5
     assert settings.progress_window == 5
     assert settings.progress_required_correct == 4
@@ -29,6 +30,9 @@ def test_documented_defaults() -> None:
     assert settings.max_input_chars == 200
     assert settings.max_reply_chars == 240
     assert settings.session_ttl_days == 30
+    assert settings.db_min_pool_size == 1
+    assert settings.db_max_pool_size == 5
+    assert settings.db_command_timeout_s == 5.0
 
 
 def test_missing_required_variable_is_named(monkeypatch: pytest.MonkeyPatch) -> None:
