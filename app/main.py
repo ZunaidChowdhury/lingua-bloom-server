@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 
 import asyncpg
@@ -18,6 +18,16 @@ from app.core.config import Settings, get_settings
 from app.core.errors import register_exception_handlers
 from app.core.logging import configure_logging
 from app.core.middleware import RequestContextMiddleware
+from app.core.rate_limit import (
+    DEFAULT_IP_LIMIT,
+    DEFAULT_IP_WINDOW,
+    DEFAULT_SESSION_CREATE_LIMIT,
+    DEFAULT_SESSION_CREATE_WINDOW,
+    DEFAULT_TURN_LIMIT,
+    DEFAULT_TURN_WINDOW,
+    RateLimitMiddleware,
+    SlidingWindowLimiter,
+)
 from app.llm.client import GroqClient
 
 logger = logging.getLogger("app.main")
@@ -56,13 +66,26 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         await app.state.llm.close()
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None,
+    clock: Callable[[], float] | None = None,
+) -> FastAPI:
     resolved = settings or get_settings()
     configure_logging(resolved.log_level)
 
     app = FastAPI(title="LinguaBloom API", version=__version__, lifespan=lifespan)
     app.state.settings = resolved
+    app.state.rate_turn = SlidingWindowLimiter(
+        DEFAULT_TURN_LIMIT, DEFAULT_TURN_WINDOW, clock=clock
+    )
+    app.state.rate_ip = SlidingWindowLimiter(
+        DEFAULT_IP_LIMIT, DEFAULT_IP_WINDOW, clock=clock
+    )
+    app.state.rate_session_create = SlidingWindowLimiter(
+        DEFAULT_SESSION_CREATE_LIMIT, DEFAULT_SESSION_CREATE_WINDOW, clock=clock
+    )
 
+    app.add_middleware(RateLimitMiddleware)
     app.add_middleware(RequestContextMiddleware)
     app.add_middleware(
         CORSMiddleware,
