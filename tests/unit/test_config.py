@@ -6,7 +6,7 @@ from app.core.config import Settings, load_settings
 def _build() -> Settings:
     return Settings(
         groq_api_key="test-key",
-        database_url="postgresql://user:pass@host:6543/postgres",
+        database_url="postgresql://user:pass@host:6543/postgres",  # scan-secrets: allow
         _env_file=None,
     )
 
