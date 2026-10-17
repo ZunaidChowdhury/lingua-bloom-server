@@ -29,6 +29,9 @@ def test_documented_defaults() -> None:
     assert settings.max_input_chars == 200
     assert settings.max_reply_chars == 240
     assert settings.session_ttl_days == 30
+    assert settings.db_min_pool_size == 1
+    assert settings.db_max_pool_size == 5
+    assert settings.db_command_timeout_s == 5.0
 
 
 def test_missing_required_variable_is_named(monkeypatch: pytest.MonkeyPatch) -> None:

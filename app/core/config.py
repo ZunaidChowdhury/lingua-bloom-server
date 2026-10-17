@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     max_input_chars: int = 200
     max_reply_chars: int = 240
     session_ttl_days: int = 30
+    db_min_pool_size: int = 1
+    db_max_pool_size: int = 5
+    db_command_timeout_s: float = 5.0
 
 
 def load_settings(_env_file: str | None = ".env") -> Settings:
