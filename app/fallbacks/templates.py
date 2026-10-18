@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, cast
 
 from app.domain.modes import Mode
 
@@ -18,6 +18,9 @@ Event = Literal[
     "support",
     "distress",
     "generic",
+    "conversation",
+    "engagement",
+    "story",
 ]
 
 EVENT_MODES: dict[Event, tuple[Mode, ...]] = {
@@ -32,6 +35,9 @@ EVENT_MODES: dict[Event, tuple[Mode, ...]] = {
     "support": ("support",),
     "distress": ("support",),
     "generic": ("learning", "conversation", "engagement", "support"),
+    "conversation": ("conversation",),
+    "engagement": ("engagement",),
+    "story": ("engagement",),
 }
 
 TEMPLATES: dict[Event, dict[int, tuple[str, ...]]] = {
@@ -85,14 +91,27 @@ TEMPLATES: dict[Event, dict[int, tuple[str, ...]]] = {
         3: ("How are you feeling today, {nickname}?", "Would you like to share how you feel?"),
     },
     "support": {
-        1: ("I am here with you.", "It is okay to feel this way."),
+        1: (
+            "I am here with you. 💛 Let us take a breath. Want to rest or play?",
+            "Big feelings can be tricky. 💛 Take one slow breath. Shall we rest or chat?",
+            "I hear you, {nickname}. 💛 Let us breathe together. Want to chat or play?",
+        ),
         2: (
-            "I am here with you. Let us take a slow breath.",
-            "It is okay to feel this way. I am here.",
+            (
+                "It is okay to feel this way. 💛 Let us take one slow breath. "
+                "Want to rest, chat, or play?"
+            ),
+            "I am right here with you. 💛 Let us pause and breathe. Would you like a rest or chat?",
         ),
         3: (
-            "I am here with you. Let us take one slow breath together.",
-            "It is okay to feel this way. I am right here with you.",
+            (
+                "I am right here beside you, {nickname}. 💛 "
+                "Let us take one slow, calm breath together. Would you like to rest, chat, or play?"
+            ),
+            (
+                "It is completely okay to feel like this. 💛 We can take a quiet breath together. "
+                "Do you want to rest, talk, or play a gentle game?"
+            ),
         ),
     },
     "distress": {
@@ -106,10 +125,99 @@ TEMPLATES: dict[Event, dict[int, tuple[str, ...]]] = {
             "I want you to be safe. Please talk to a grown-up you trust, they can help.",
         ),
     },
+    "conversation": {
+        1: (
+            "I love chatting with you! 🌱 What do you like doing?",
+            "That is fun to hear! 🌸 Tell me about your favorite thing.",
+            "You are a great friend, {nickname}! 🌱 What shall we talk about?",
+        ),
+        2: (
+            "I love sharing stories with you, {nickname}! 🌱 What fun thing did you see today?",
+            "That sounds so fun to hear! 🌸 What is something you really enjoy doing?",
+        ),
+        3: (
+            (
+                "It is always a treat chatting with you, {nickname}! 🌱 "
+                "What is the most exciting thing on your mind today?"
+            ),
+            "I really enjoy hearing all your thoughts! 🌸 What would you love to talk about next?",
+        ),
+    },
+    "engagement": {
+        1: (
+            "Let us play a game! 🎈 Can you name a red fruit?",
+            "Here is a fun little riddle! 🌟 What has yellow petals? A sunflower!",
+            "Let us pretend together, {nickname}! 🎈 Can you hop like a bunny?",
+        ),
+        2: (
+            (
+                "Let us play a pretend game together! 🌟 Pretend you are flying high like a bird. "
+                "Where will you fly first?"
+            ),
+            (
+                "Here is a playful word riddle for you! 🌟 "
+                "What has four wheels and goes zoom? A car!"
+            ),
+        ),
+        3: (
+            (
+                "Here is a clever riddle for you, {nickname}! 🌟 "
+                "I am crunchy, orange, and rabbits love eating me. The answer is a sweet carrot!"
+            ),
+            (
+                "Let us play an imaginative pretend game together! 🌟 "
+                "Imagine we are exploring a magical secret garden today. "
+                "What amazing flowers do you find?"
+            ),
+        ),
+    },
+    "story": {
+        1: (
+            (
+                "Once, a tiny seed woke up. 🌱 The warm sun smiled brightly. "
+                "The seed grew into a flower!"
+            ),
+            (
+                "A little puppy found a ball. 🐶 The ball bounced very high. "
+                "The happy puppy caught it!"
+            ),
+        ),
+        2: (
+            (
+                "A little frog found a green lily pad. 🐸 The happy frog sang a sweet song. "
+                "All the friendly pond animals danced happily!"
+            ),
+            (
+                "A tiny bird learned to fly today. 🐦 She fluttered high above the tall trees. "
+                "The gentle wind carried her safely home!"
+            ),
+        ),
+        3: (
+            (
+                "Deep inside a magical forest, a curious squirrel found a shiny golden acorn. 🐿️ "
+                "When the squirrel tapped the acorn, bright colorful flowers blossomed all around. "
+                "The whole garden sparkled with warm light!"
+            ),
+            (
+                "A brave little hedgehog went on a sunny adventure across the meadow. 🦔 "
+                "He shared sweet ripe berries with a kind deer he met. "
+                "Together they watched the beautiful sunset over the hills!"
+            ),
+        ),
+    },
     "generic": {
-        1: ("Let us keep going.", "Tell me more."),
-        2: ("Let us keep going together.", "Tell me more about that."),
-        3: ("Let us keep going, shall we?", "Tell me more about that, please."),
+        1: (
+            "Let us keep exploring together! 🌱",
+            "I love playing with you, {nickname}! 🌸",
+        ),
+        2: (
+            "Let us keep discovering new words together! 🌱",
+            "You are doing wonderful today, {nickname}! 🌸",
+        ),
+        3: (
+            "Let us keep exploring new and exciting words together! 🌱",
+            "You are doing such a wonderful job today, {nickname}! 🌸",
+        ),
     },
 }
 
@@ -141,7 +249,13 @@ def pick_template(
 ) -> str:
     """Choose a deterministic, safe fallback reply for the given combination."""
 
-    chosen_event: Event = event if mode in EVENT_MODES.get(event, ()) else "generic"
+    if event == "generic" and mode in EVENT_MODES and mode in TEMPLATES:
+        chosen_event: Event = cast(Event, mode)
+    elif mode in EVENT_MODES.get(event, ()):
+        chosen_event = event
+    else:
+        chosen_event = "generic"
+
     variants = TEMPLATES[chosen_event][_level_key(level)]
     chosen = variants[seed % len(variants)]
     return chosen.replace("{nickname}", _nickname_slot(nickname))

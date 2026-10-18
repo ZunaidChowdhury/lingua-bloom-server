@@ -7,11 +7,33 @@
     "prompt": "What color is a banana?",
     "emoji": "🍌",
     "choices": [
-      {"id": "a", "label": "Yellow", "emoji": "🟡"},
-      {"id": "b", "label": "Blue", "emoji": "🔵"},
-      {"id": "c", "label": "Red", "emoji": "🔴"}
+      {
+        "id": "a",
+        "label": "Yellow",
+        "emoji": "🟡"
+      },
+      {
+        "id": "b",
+        "label": "Blue",
+        "emoji": "🔵"
+      },
+      {
+        "id": "c",
+        "label": "Red",
+        "emoji": "🔴"
+      },
+      {
+        "id": "d",
+        "label": "Green",
+        "emoji": "🟢"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["yellow"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "yellow"
+      ]
+    },
     "hint": "Think of the sun. It is the same color!",
     "reveal": "A banana is yellow."
   },
@@ -23,11 +45,33 @@
     "prompt": "What color is the grass?",
     "emoji": "🌱",
     "choices": [
-      {"id": "a", "label": "Green", "emoji": "🟩"},
-      {"id": "b", "label": "Red", "emoji": "🔴"},
-      {"id": "c", "label": "Purple", "emoji": "🟣"}
+      {
+        "id": "a",
+        "label": "Green",
+        "emoji": "🟩"
+      },
+      {
+        "id": "b",
+        "label": "Red",
+        "emoji": "🔴"
+      },
+      {
+        "id": "c",
+        "label": "Purple",
+        "emoji": "🟣"
+      },
+      {
+        "id": "d",
+        "label": "Orange",
+        "emoji": "🟠"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["green"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "green"
+      ]
+    },
     "hint": "It grows outside in the garden.",
     "reveal": "The grass is green."
   },
@@ -39,11 +83,33 @@
     "prompt": "What color is the sky?",
     "emoji": "☁️",
     "choices": [
-      {"id": "a", "label": "Blue", "emoji": "🔵"},
-      {"id": "b", "label": "Orange", "emoji": "🟠"},
-      {"id": "c", "label": "Pink", "emoji": "🩷"}
+      {
+        "id": "a",
+        "label": "Blue",
+        "emoji": "🔵"
+      },
+      {
+        "id": "b",
+        "label": "Orange",
+        "emoji": "🟠"
+      },
+      {
+        "id": "c",
+        "label": "Pink",
+        "emoji": "🩷"
+      },
+      {
+        "id": "d",
+        "label": "Black",
+        "emoji": "⚫"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["blue"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "blue"
+      ]
+    },
     "hint": "Look up on a sunny day.",
     "reveal": "The sky is blue."
   },
@@ -51,11 +117,37 @@
     "id": "l1-colors-sun",
     "level": 1,
     "skill": "colors",
-    "type": "word",
-    "prompt": "Type the color of the sun.",
+    "type": "choice",
+    "prompt": "What color is the sun?",
     "emoji": "☀️",
-    "choices": [],
-    "answer": {"choice_id": null, "accepted_words": ["yellow"]},
+    "choices": [
+      {
+        "id": "a",
+        "label": "Yellow",
+        "emoji": "🟡"
+      },
+      {
+        "id": "b",
+        "label": "Blue",
+        "emoji": "🔵"
+      },
+      {
+        "id": "c",
+        "label": "Green",
+        "emoji": "🟢"
+      },
+      {
+        "id": "d",
+        "label": "Purple",
+        "emoji": "🟣"
+      }
+    ],
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "yellow"
+      ]
+    },
     "hint": "It shines and it is bright.",
     "reveal": "The sun is yellow."
   },
@@ -67,11 +159,33 @@
     "prompt": "What color is a tomato?",
     "emoji": "🍅",
     "choices": [
-      {"id": "a", "label": "Red", "emoji": "🔴"},
-      {"id": "b", "label": "Blue", "emoji": "🔵"},
-      {"id": "c", "label": "Black", "emoji": "⚫"}
+      {
+        "id": "a",
+        "label": "Red",
+        "emoji": "🔴"
+      },
+      {
+        "id": "b",
+        "label": "Blue",
+        "emoji": "🔵"
+      },
+      {
+        "id": "c",
+        "label": "Black",
+        "emoji": "⚫"
+      },
+      {
+        "id": "d",
+        "label": "Yellow",
+        "emoji": "🟡"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["red"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "red"
+      ]
+    },
     "hint": "It is a bright round fruit.",
     "reveal": "A tomato is red."
   },
@@ -83,11 +197,33 @@
     "prompt": "Which animal says moo?",
     "emoji": "🐄",
     "choices": [
-      {"id": "a", "label": "Cow"},
-      {"id": "b", "label": "Cat"},
-      {"id": "c", "label": "Dog"}
+      {
+        "id": "a",
+        "label": "Cow",
+        "emoji": "🐄"
+      },
+      {
+        "id": "b",
+        "label": "Cat",
+        "emoji": "🐈"
+      },
+      {
+        "id": "c",
+        "label": "Dog",
+        "emoji": "🐕"
+      },
+      {
+        "id": "d",
+        "label": "Duck",
+        "emoji": "🦆"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["cow"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "cow"
+      ]
+    },
     "hint": "It gives us milk.",
     "reveal": "A cow says moo."
   },
@@ -95,11 +231,37 @@
     "id": "l1-animals-cat",
     "level": 1,
     "skill": "animals",
-    "type": "word",
-    "prompt": "Type the animal that says meow.",
+    "type": "choice",
+    "prompt": "Which animal says meow?",
     "emoji": "🐈",
-    "choices": [],
-    "answer": {"choice_id": null, "accepted_words": ["cat"]},
+    "choices": [
+      {
+        "id": "a",
+        "label": "Cat",
+        "emoji": "🐈"
+      },
+      {
+        "id": "b",
+        "label": "Dog",
+        "emoji": "🐕"
+      },
+      {
+        "id": "c",
+        "label": "Cow",
+        "emoji": "🐄"
+      },
+      {
+        "id": "d",
+        "label": "Duck",
+        "emoji": "🦆"
+      }
+    ],
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "cat"
+      ]
+    },
     "hint": "It is soft and furry.",
     "reveal": "A cat says meow."
   },
@@ -111,11 +273,33 @@
     "prompt": "Which animal can swim and quack?",
     "emoji": "🦆",
     "choices": [
-      {"id": "a", "label": "Duck"},
-      {"id": "b", "label": "Lion"},
-      {"id": "c", "label": "Bee"}
+      {
+        "id": "a",
+        "label": "Duck",
+        "emoji": "🦆"
+      },
+      {
+        "id": "b",
+        "label": "Lion",
+        "emoji": "🦁"
+      },
+      {
+        "id": "c",
+        "label": "Bee",
+        "emoji": "🐝"
+      },
+      {
+        "id": "d",
+        "label": "Horse",
+        "emoji": "🐴"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["duck"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "duck"
+      ]
+    },
     "hint": "It has a flat beak.",
     "reveal": "A duck quacks."
   },
@@ -127,11 +311,33 @@
     "prompt": "Which animal has a long trunk?",
     "emoji": "🐘",
     "choices": [
-      {"id": "a", "label": "Elephant"},
-      {"id": "b", "label": "Fish"},
-      {"id": "c", "label": "Mouse"}
+      {
+        "id": "a",
+        "label": "Elephant",
+        "emoji": "🐘"
+      },
+      {
+        "id": "b",
+        "label": "Fish",
+        "emoji": "🐟"
+      },
+      {
+        "id": "c",
+        "label": "Mouse",
+        "emoji": "🐭"
+      },
+      {
+        "id": "d",
+        "label": "Bird",
+        "emoji": "🐦"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["elephant"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "elephant"
+      ]
+    },
     "hint": "It is very big and grey.",
     "reveal": "An elephant has a trunk."
   },
@@ -139,11 +345,37 @@
     "id": "l1-animals-bird",
     "level": 1,
     "skill": "animals",
-    "type": "word",
-    "prompt": "Type the animal that can fly.",
+    "type": "choice",
+    "prompt": "Which animal has feathers and can fly?",
     "emoji": "🐦",
-    "choices": [],
-    "answer": {"choice_id": null, "accepted_words": ["bird"]},
+    "choices": [
+      {
+        "id": "a",
+        "label": "Bird",
+        "emoji": "🐦"
+      },
+      {
+        "id": "b",
+        "label": "Fish",
+        "emoji": "🐟"
+      },
+      {
+        "id": "c",
+        "label": "Cat",
+        "emoji": "🐈"
+      },
+      {
+        "id": "d",
+        "label": "Frog",
+        "emoji": "🐸"
+      }
+    ],
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "bird"
+      ]
+    },
     "hint": "It has wings and feathers.",
     "reveal": "A bird can fly."
   },
@@ -155,11 +387,33 @@
     "prompt": "What is round and you can kick?",
     "emoji": "⚽",
     "choices": [
-      {"id": "a", "label": "Ball"},
-      {"id": "b", "label": "Book"},
-      {"id": "c", "label": "Cup"}
+      {
+        "id": "a",
+        "label": "Ball",
+        "emoji": "⚽"
+      },
+      {
+        "id": "b",
+        "label": "Book",
+        "emoji": "📖"
+      },
+      {
+        "id": "c",
+        "label": "Cup",
+        "emoji": "🥤"
+      },
+      {
+        "id": "d",
+        "label": "Chair",
+        "emoji": "🪑"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["ball"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "ball"
+      ]
+    },
     "hint": "You play with it outside.",
     "reveal": "A ball is round."
   },
@@ -171,11 +425,33 @@
     "prompt": "What do you sit on?",
     "emoji": "🪑",
     "choices": [
-      {"id": "a", "label": "Chair"},
-      {"id": "b", "label": "Spoon"},
-      {"id": "c", "label": "Hat"}
+      {
+        "id": "a",
+        "label": "Chair",
+        "emoji": "🪑"
+      },
+      {
+        "id": "b",
+        "label": "Spoon",
+        "emoji": "🥄"
+      },
+      {
+        "id": "c",
+        "label": "Hat",
+        "emoji": "🧢"
+      },
+      {
+        "id": "d",
+        "label": "Clock",
+        "emoji": "🕐"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["chair"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "chair"
+      ]
+    },
     "hint": "It has four legs and a back.",
     "reveal": "You sit on a chair."
   },
@@ -183,11 +459,37 @@
     "id": "l1-objects-key",
     "level": 1,
     "skill": "objects",
-    "type": "word",
-    "prompt": "Type the thing that opens a door.",
+    "type": "choice",
+    "prompt": "What opens a locked door?",
     "emoji": "🔑",
-    "choices": [],
-    "answer": {"choice_id": null, "accepted_words": ["key"]},
+    "choices": [
+      {
+        "id": "a",
+        "label": "Key",
+        "emoji": "🔑"
+      },
+      {
+        "id": "b",
+        "label": "Cup",
+        "emoji": "🥤"
+      },
+      {
+        "id": "c",
+        "label": "Sock",
+        "emoji": "🧦"
+      },
+      {
+        "id": "d",
+        "label": "Book",
+        "emoji": "📖"
+      }
+    ],
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "key"
+      ]
+    },
     "hint": "It is small and made of metal.",
     "reveal": "A key opens a door."
   },
@@ -199,11 +501,33 @@
     "prompt": "What tells you the time?",
     "emoji": "🕐",
     "choices": [
-      {"id": "a", "label": "Clock"},
-      {"id": "b", "label": "Shoe"},
-      {"id": "c", "label": "Apple"}
+      {
+        "id": "a",
+        "label": "Clock",
+        "emoji": "🕐"
+      },
+      {
+        "id": "b",
+        "label": "Shoe",
+        "emoji": "👟"
+      },
+      {
+        "id": "c",
+        "label": "Apple",
+        "emoji": "🍎"
+      },
+      {
+        "id": "d",
+        "label": "Bed",
+        "emoji": "🛏️"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["clock"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "clock"
+      ]
+    },
     "hint": "It ticks and has hands.",
     "reveal": "A clock tells the time."
   },
@@ -215,11 +539,33 @@
     "prompt": "What do you drink from?",
     "emoji": "🥤",
     "choices": [
-      {"id": "a", "label": "Cup"},
-      {"id": "b", "label": "Bed"},
-      {"id": "c", "label": "Sock"}
+      {
+        "id": "a",
+        "label": "Cup",
+        "emoji": "🥤"
+      },
+      {
+        "id": "b",
+        "label": "Bed",
+        "emoji": "🛏️"
+      },
+      {
+        "id": "c",
+        "label": "Sock",
+        "emoji": "🧦"
+      },
+      {
+        "id": "d",
+        "label": "Hat",
+        "emoji": "🧢"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["cup"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "cup"
+      ]
+    },
     "hint": "You hold it in your hand.",
     "reveal": "You drink from a cup."
   },
@@ -231,11 +577,33 @@
     "prompt": "What fruit is red and crunchy?",
     "emoji": "🍎",
     "choices": [
-      {"id": "a", "label": "Apple"},
-      {"id": "b", "label": "Bread"},
-      {"id": "c", "label": "Carrot"}
+      {
+        "id": "a",
+        "label": "Apple",
+        "emoji": "🍎"
+      },
+      {
+        "id": "b",
+        "label": "Bread",
+        "emoji": "🍞"
+      },
+      {
+        "id": "c",
+        "label": "Carrot",
+        "emoji": "🥕"
+      },
+      {
+        "id": "d",
+        "label": "Milk",
+        "emoji": "🥛"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["apple"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "apple"
+      ]
+    },
     "hint": "It grows on a tree.",
     "reveal": "An apple is a red fruit."
   },
@@ -243,11 +611,37 @@
     "id": "l1-food-milk",
     "level": 1,
     "skill": "food",
-    "type": "word",
-    "prompt": "Type the white drink from a cow.",
+    "type": "choice",
+    "prompt": "What is white and good to drink?",
     "emoji": "🥛",
-    "choices": [],
-    "answer": {"choice_id": null, "accepted_words": ["milk"]},
+    "choices": [
+      {
+        "id": "a",
+        "label": "Milk",
+        "emoji": "🥛"
+      },
+      {
+        "id": "b",
+        "label": "Bread",
+        "emoji": "🍞"
+      },
+      {
+        "id": "c",
+        "label": "Egg",
+        "emoji": "🥚"
+      },
+      {
+        "id": "d",
+        "label": "Apple",
+        "emoji": "🍎"
+      }
+    ],
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "milk"
+      ]
+    },
     "hint": "It is white and good for your bones.",
     "reveal": "Milk is white."
   },
@@ -259,11 +653,33 @@
     "prompt": "What do we make from flour?",
     "emoji": "🍞",
     "choices": [
-      {"id": "a", "label": "Bread"},
-      {"id": "b", "label": "Water"},
-      {"id": "c", "label": "Stone"}
+      {
+        "id": "a",
+        "label": "Bread",
+        "emoji": "🍞"
+      },
+      {
+        "id": "b",
+        "label": "Water",
+        "emoji": "💧"
+      },
+      {
+        "id": "c",
+        "label": "Stone",
+        "emoji": "🪨"
+      },
+      {
+        "id": "d",
+        "label": "Apple",
+        "emoji": "🍎"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["bread"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "bread"
+      ]
+    },
     "hint": "Toast is made from it.",
     "reveal": "Bread is made from flour."
   },
@@ -271,11 +687,37 @@
     "id": "l1-food-banana",
     "level": 1,
     "skill": "food",
-    "type": "word",
-    "prompt": "Type a long yellow fruit.",
+    "type": "choice",
+    "prompt": "What is a long yellow fruit that monkeys love?",
     "emoji": "🍌",
-    "choices": [],
-    "answer": {"choice_id": null, "accepted_words": ["banana"]},
+    "choices": [
+      {
+        "id": "a",
+        "label": "Banana",
+        "emoji": "🍌"
+      },
+      {
+        "id": "b",
+        "label": "Carrot",
+        "emoji": "🥕"
+      },
+      {
+        "id": "c",
+        "label": "Egg",
+        "emoji": "🥚"
+      },
+      {
+        "id": "d",
+        "label": "Bread",
+        "emoji": "🍞"
+      }
+    ],
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "banana"
+      ]
+    },
     "hint": "Monkeys love it.",
     "reveal": "A banana is a long yellow fruit."
   },
@@ -287,11 +729,33 @@
     "prompt": "What comes from a chicken?",
     "emoji": "🥚",
     "choices": [
-      {"id": "a", "label": "Egg"},
-      {"id": "b", "label": "Lemon"},
-      {"id": "c", "label": "Cake"}
+      {
+        "id": "a",
+        "label": "Egg",
+        "emoji": "🥚"
+      },
+      {
+        "id": "b",
+        "label": "Lemon",
+        "emoji": "🍋"
+      },
+      {
+        "id": "c",
+        "label": "Cake",
+        "emoji": "🍰"
+      },
+      {
+        "id": "d",
+        "label": "Bread",
+        "emoji": "🍞"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["egg"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "egg"
+      ]
+    },
     "hint": "You can have it for breakfast.",
     "reveal": "An egg comes from a chicken."
   },
@@ -303,11 +767,33 @@
     "prompt": "What do you use to wave hello?",
     "emoji": "👋",
     "choices": [
-      {"id": "a", "label": "Hand"},
-      {"id": "b", "label": "Foot"},
-      {"id": "c", "label": "Ear"}
+      {
+        "id": "a",
+        "label": "Hand",
+        "emoji": "✋"
+      },
+      {
+        "id": "b",
+        "label": "Foot",
+        "emoji": "🦶"
+      },
+      {
+        "id": "c",
+        "label": "Ear",
+        "emoji": "👂"
+      },
+      {
+        "id": "d",
+        "label": "Nose",
+        "emoji": "👃"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["hand"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "hand"
+      ]
+    },
     "hint": "You have two of them.",
     "reveal": "You wave with your hand."
   },
@@ -319,11 +805,33 @@
     "prompt": "What do you use to see?",
     "emoji": "👀",
     "choices": [
-      {"id": "a", "label": "Eyes"},
-      {"id": "b", "label": "Nose"},
-      {"id": "c", "label": "Hair"}
+      {
+        "id": "a",
+        "label": "Eyes",
+        "emoji": "👀"
+      },
+      {
+        "id": "b",
+        "label": "Nose",
+        "emoji": "👃"
+      },
+      {
+        "id": "c",
+        "label": "Hair",
+        "emoji": "💇"
+      },
+      {
+        "id": "d",
+        "label": "Ear",
+        "emoji": "👂"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["eyes"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "eyes"
+      ]
+    },
     "hint": "They are on your face.",
     "reveal": "You see with your eyes."
   },
@@ -331,11 +839,37 @@
     "id": "l1-body-ear",
     "level": 1,
     "skill": "body",
-    "type": "word",
-    "prompt": "Type the body part you hear with.",
+    "type": "choice",
+    "prompt": "What body part do you hear with?",
     "emoji": "👂",
-    "choices": [],
-    "answer": {"choice_id": null, "accepted_words": ["ear"]},
+    "choices": [
+      {
+        "id": "a",
+        "label": "Ear",
+        "emoji": "👂"
+      },
+      {
+        "id": "b",
+        "label": "Nose",
+        "emoji": "👃"
+      },
+      {
+        "id": "c",
+        "label": "Hand",
+        "emoji": "✋"
+      },
+      {
+        "id": "d",
+        "label": "Foot",
+        "emoji": "🦶"
+      }
+    ],
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "ear"
+      ]
+    },
     "hint": "It is on the side of your head.",
     "reveal": "You hear with your ear."
   },
@@ -347,11 +881,33 @@
     "prompt": "What do you use to smell a flower?",
     "emoji": "👃",
     "choices": [
-      {"id": "a", "label": "Nose"},
-      {"id": "b", "label": "Toe"},
-      {"id": "c", "label": "Knee"}
+      {
+        "id": "a",
+        "label": "Nose",
+        "emoji": "👃"
+      },
+      {
+        "id": "b",
+        "label": "Toe",
+        "emoji": "🦶"
+      },
+      {
+        "id": "c",
+        "label": "Knee",
+        "emoji": "🦵"
+      },
+      {
+        "id": "d",
+        "label": "Ear",
+        "emoji": "👂"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["nose"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "nose"
+      ]
+    },
     "hint": "It is in the middle of your face.",
     "reveal": "You smell with your nose."
   },
@@ -359,11 +915,37 @@
     "id": "l1-body-mouth",
     "level": 1,
     "skill": "body",
-    "type": "word",
-    "prompt": "Type the part you eat with.",
+    "type": "choice",
+    "prompt": "What body part do you eat and smile with?",
     "emoji": "👄",
-    "choices": [],
-    "answer": {"choice_id": null, "accepted_words": ["mouth"]},
+    "choices": [
+      {
+        "id": "a",
+        "label": "Mouth",
+        "emoji": "👄"
+      },
+      {
+        "id": "b",
+        "label": "Eye",
+        "emoji": "👀"
+      },
+      {
+        "id": "c",
+        "label": "Nose",
+        "emoji": "👃"
+      },
+      {
+        "id": "d",
+        "label": "Hand",
+        "emoji": "✋"
+      }
+    ],
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "mouth"
+      ]
+    },
     "hint": "You also talk with it.",
     "reveal": "You eat with your mouth."
   }

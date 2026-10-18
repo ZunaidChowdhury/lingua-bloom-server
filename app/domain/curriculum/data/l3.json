@@ -10,7 +10,17 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["cat", "kitten"], ["big", "small", "little"]]
+      "keyword_groups": [
+        [
+          "cat",
+          "kitten"
+        ],
+        [
+          "big",
+          "small",
+          "little"
+        ]
+      ]
     },
     "hint": "Start with 'The cat is'.",
     "reveal": "The cat is small and soft."
@@ -26,7 +36,18 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["dog", "puppy"], ["black", "white", "brown", "golden"]]
+      "keyword_groups": [
+        [
+          "dog",
+          "puppy"
+        ],
+        [
+          "black",
+          "white",
+          "brown",
+          "golden"
+        ]
+      ]
     },
     "hint": "Think about its fur.",
     "reveal": "The dog is black and fast."
@@ -42,7 +63,15 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["apple"], ["red", "green"]]
+      "keyword_groups": [
+        [
+          "apple"
+        ],
+        [
+          "red",
+          "green"
+        ]
+      ]
     },
     "hint": "It is a fruit.",
     "reveal": "The apple is red and round."
@@ -58,7 +87,15 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["ball"], ["round", "circle"]]
+      "keyword_groups": [
+        [
+          "ball"
+        ],
+        [
+          "round",
+          "circle"
+        ]
+      ]
     },
     "hint": "Think about its shape.",
     "reveal": "The ball is round and red."
@@ -74,7 +111,16 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["sun"], ["hot", "warm", "bright"]]
+      "keyword_groups": [
+        [
+          "sun"
+        ],
+        [
+          "hot",
+          "warm",
+          "bright"
+        ]
+      ]
     },
     "hint": "It is up in the sky.",
     "reveal": "The sun is hot and bright."
@@ -90,7 +136,20 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["flower", "rose", "daisy"], ["red", "yellow", "pink", "purple", "blue"]]
+      "keyword_groups": [
+        [
+          "flower",
+          "rose",
+          "daisy"
+        ],
+        [
+          "red",
+          "yellow",
+          "pink",
+          "purple",
+          "blue"
+        ]
+      ]
     },
     "hint": "Think about its petals.",
     "reveal": "The flower is pink and pretty."
@@ -103,11 +162,29 @@
     "prompt": "Which word describes a banana?",
     "emoji": "🍌",
     "choices": [
-      {"id": "a", "label": "Yellow"},
-      {"id": "b", "label": "Tall"},
-      {"id": "c", "label": "Loud"}
+      {
+        "id": "a",
+        "label": "Yellow"
+      },
+      {
+        "id": "b",
+        "label": "Tall"
+      },
+      {
+        "id": "c",
+        "label": "Loud"
+      },
+      {
+        "id": "d",
+        "label": "Heavy"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["yellow"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "yellow"
+      ]
+    },
     "hint": "It is a color.",
     "reveal": "A banana is yellow."
   },
@@ -119,11 +196,29 @@
     "prompt": "Which word describes a kitten?",
     "emoji": "🐱",
     "choices": [
-      {"id": "a", "label": "Soft"},
-      {"id": "b", "label": "Loud"},
-      {"id": "c", "label": "Heavy"}
+      {
+        "id": "a",
+        "label": "Soft"
+      },
+      {
+        "id": "b",
+        "label": "Loud"
+      },
+      {
+        "id": "c",
+        "label": "Heavy"
+      },
+      {
+        "id": "d",
+        "label": "Tall"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["soft"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "soft"
+      ]
+    },
     "hint": "You feel it when you touch fur.",
     "reveal": "A kitten is soft."
   },
@@ -138,7 +233,11 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["happy"]]
+      "keyword_groups": [
+        [
+          "happy"
+        ]
+      ]
     },
     "hint": "Tell me when you feel happy.",
     "reveal": "I am happy today at school."
@@ -154,7 +253,11 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["park"]]
+      "keyword_groups": [
+        [
+          "park"
+        ]
+      ]
     },
     "hint": "What do you do at the park?",
     "reveal": "We play at the park."
@@ -170,7 +273,11 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["jump"]]
+      "keyword_groups": [
+        [
+          "jump"
+        ]
+      ]
     },
     "hint": "Who can jump?",
     "reveal": "I can jump very high."
@@ -186,7 +293,11 @@
     "rubric": {
       "min_words": 4,
       "max_words": 12,
-      "keyword_groups": [["friend"]]
+      "keyword_groups": [
+        [
+          "friend"
+        ]
+      ]
     },
     "hint": "What do you do together?",
     "reveal": "I play with my friend."
@@ -199,11 +310,27 @@
     "prompt": "Which sentence is in the right order?",
     "emoji": "📖",
     "choices": [
-      {"id": "a", "label": "I like to read."},
-      {"id": "b", "label": "Like I read to."},
-      {"id": "c", "label": "Read to I like."}
+      {
+        "id": "a",
+        "label": "I like to read."
+      },
+      {
+        "id": "b",
+        "label": "Like I read to."
+      },
+      {
+        "id": "c",
+        "label": "Read to I like."
+      },
+      {
+        "id": "d",
+        "label": "To read like I."
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "Start with 'I'.",
     "reveal": "I like to read."
   },
@@ -215,11 +342,27 @@
     "prompt": "Which sentence makes sense?",
     "emoji": "🥛",
     "choices": [
-      {"id": "a", "label": "She drinks water."},
-      {"id": "b", "label": "Water she drinks the."},
-      {"id": "c", "label": "Drinks she water."}
+      {
+        "id": "a",
+        "label": "She drinks water."
+      },
+      {
+        "id": "b",
+        "label": "Water she drinks the."
+      },
+      {
+        "id": "c",
+        "label": "Drinks she water."
+      },
+      {
+        "id": "d",
+        "label": "Water drinks she."
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "Who does it first?",
     "reveal": "She drinks water."
   },
@@ -231,11 +374,27 @@
     "prompt": "Which sentence joins two ideas?",
     "emoji": "😴",
     "choices": [
-      {"id": "a", "label": "I am tired, so I will rest."},
-      {"id": "b", "label": "I am tired. rest."},
-      {"id": "c", "label": "Tired I rest so."}
+      {
+        "id": "a",
+        "label": "I am tired, so I will rest."
+      },
+      {
+        "id": "b",
+        "label": "I am tired. rest."
+      },
+      {
+        "id": "c",
+        "label": "Tired I rest so."
+      },
+      {
+        "id": "d",
+        "label": "Rest will I so tired."
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "Look for the word 'so'.",
     "reveal": "I am tired, so I will rest."
   },
@@ -247,11 +406,27 @@
     "prompt": "Which one is a question?",
     "emoji": "🎩",
     "choices": [
-      {"id": "a", "label": "Where is my hat?"},
-      {"id": "b", "label": "My hat is here."},
-      {"id": "c", "label": "Here my hat."}
+      {
+        "id": "a",
+        "label": "Where is my hat?"
+      },
+      {
+        "id": "b",
+        "label": "My hat is here."
+      },
+      {
+        "id": "c",
+        "label": "Here my hat."
+      },
+      {
+        "id": "d",
+        "label": "Hat is where?"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "It ends with a question mark.",
     "reveal": "Where is my hat?"
   },
@@ -266,7 +441,13 @@
     "rubric": {
       "min_words": 2,
       "max_words": 12,
-      "keyword_groups": [["hi", "hello", "hey"]]
+      "keyword_groups": [
+        [
+          "hi",
+          "hello",
+          "hey"
+        ]
+      ]
     },
     "hint": "A friendly greeting.",
     "reveal": "Hello, friend!"
@@ -282,7 +463,12 @@
     "rubric": {
       "min_words": 2,
       "max_words": 12,
-      "keyword_groups": [["thank", "thanks"]]
+      "keyword_groups": [
+        [
+          "thank",
+          "thanks"
+        ]
+      ]
     },
     "hint": "Two kind words.",
     "reveal": "Thank you so much!"
@@ -295,11 +481,27 @@
     "prompt": "How do you ask someone's name?",
     "emoji": "🙋",
     "choices": [
-      {"id": "a", "label": "What is your name?"},
-      {"id": "b", "label": "Your name is what?"},
-      {"id": "c", "label": "Name your what is?"}
+      {
+        "id": "a",
+        "label": "What is your name?"
+      },
+      {
+        "id": "b",
+        "label": "Your name is what?"
+      },
+      {
+        "id": "c",
+        "label": "Name your what is?"
+      },
+      {
+        "id": "d",
+        "label": "What name your?"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "Start with 'What'.",
     "reveal": "What is your name?"
   },
@@ -311,11 +513,29 @@
     "prompt": "It is time to go home. What do you say?",
     "emoji": "🚪",
     "choices": [
-      {"id": "a", "label": "Goodbye!"},
-      {"id": "b", "label": "Hello!"},
-      {"id": "c", "label": "Thank you!"}
+      {
+        "id": "a",
+        "label": "Goodbye!"
+      },
+      {
+        "id": "b",
+        "label": "Hello!"
+      },
+      {
+        "id": "c",
+        "label": "Thank you!"
+      },
+      {
+        "id": "d",
+        "label": "Good morning!"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": ["goodbye"]},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": [
+        "goodbye"
+      ]
+    },
     "hint": "It is not hello.",
     "reveal": "You say goodbye."
   },
@@ -327,11 +547,27 @@
     "prompt": "You meet a friend in the morning. What do you say?",
     "emoji": "🌅",
     "choices": [
-      {"id": "a", "label": "Good morning!"},
-      {"id": "b", "label": "Good night!"},
-      {"id": "c", "label": "Goodbye!"}
+      {
+        "id": "a",
+        "label": "Good morning!"
+      },
+      {
+        "id": "b",
+        "label": "Good night!"
+      },
+      {
+        "id": "c",
+        "label": "Goodbye!"
+      },
+      {
+        "id": "d",
+        "label": "Thank you!"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "It is the start of the day.",
     "reveal": "You say good morning."
   },
@@ -343,11 +579,27 @@
     "prompt": "You want help. What do you say?",
     "emoji": "🆘",
     "choices": [
-      {"id": "a", "label": "Can you help me?"},
-      {"id": "b", "label": "I help you no."},
-      {"id": "c", "label": "Help me you can?"}
+      {
+        "id": "a",
+        "label": "Can you help me?"
+      },
+      {
+        "id": "b",
+        "label": "I help you no."
+      },
+      {
+        "id": "c",
+        "label": "Help me you can?"
+      },
+      {
+        "id": "d",
+        "label": "You can help?"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "Start with 'Can you'.",
     "reveal": "Can you help me?"
   },
@@ -359,11 +611,27 @@
     "prompt": "You bump into a friend. What do you say?",
     "emoji": "😔",
     "choices": [
-      {"id": "a", "label": "I am sorry."},
-      {"id": "b", "label": "I am happy."},
-      {"id": "c", "label": "Goodbye."}
+      {
+        "id": "a",
+        "label": "I am sorry."
+      },
+      {
+        "id": "b",
+        "label": "I am happy."
+      },
+      {
+        "id": "c",
+        "label": "Goodbye."
+      },
+      {
+        "id": "d",
+        "label": "Good night."
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "A kind way to say it was a mistake.",
     "reveal": "You say I am sorry."
   },
@@ -375,11 +643,27 @@
     "prompt": "You want to play with a friend. What do you say?",
     "emoji": "🧩",
     "choices": [
-      {"id": "a", "label": "Do you want to play?"},
-      {"id": "b", "label": "You play no."},
-      {"id": "c", "label": "Play you do want?"}
+      {
+        "id": "a",
+        "label": "Do you want to play?"
+      },
+      {
+        "id": "b",
+        "label": "You play no."
+      },
+      {
+        "id": "c",
+        "label": "Play you do want?"
+      },
+      {
+        "id": "d",
+        "label": "Play want do you?"
+      }
     ],
-    "answer": {"choice_id": "a", "accepted_words": []},
+    "answer": {
+      "choice_id": "a",
+      "accepted_words": []
+    },
     "hint": "Start with 'Do you'.",
     "reveal": "Do you want to play?"
   }
