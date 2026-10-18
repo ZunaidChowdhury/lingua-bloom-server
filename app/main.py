@@ -11,9 +11,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
+from app.api.routes.chat import router as chat_router
 from app.api.routes.health import router as health_router
+from app.api.routes.progress import router as progress_router
 from app.api.routes.sessions import router as sessions_router
-from app.api.routes.slice import router as slice_router
 from app.core.config import Settings, get_settings
 from app.core.errors import register_exception_handlers
 from app.core.logging import configure_logging
@@ -100,7 +101,8 @@ def create_app(
     register_exception_handlers(app)
     app.include_router(health_router)
     app.include_router(sessions_router)
-    app.include_router(slice_router)
+    app.include_router(chat_router)
+    app.include_router(progress_router)
     return app
 
 
