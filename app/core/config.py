@@ -2,7 +2,7 @@
 
 from functools import lru_cache
 
-from pydantic import ValidationError
+from pydantic import ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,6 +19,16 @@ class Settings(BaseSettings):
     groq_api_key: str
     database_url: str
     test_database_url: str | None = None
+
+    @field_validator("database_url", "test_database_url", mode="before")
+    @classmethod
+    def _clean_dsn(cls, v: str | None) -> str | None:
+        if isinstance(v, str):
+            cleaned = v.strip().strip("'\"").strip()
+            if cleaned.startswith("DATABASE_URL="):
+                cleaned = cleaned[len("DATABASE_URL=") :].strip().strip("'\"").strip()
+            return cleaned
+        return v
 
     groq_model: str = "llama-3.1-8b-instant"
     frontend_origin: str = "http://localhost:3000"
