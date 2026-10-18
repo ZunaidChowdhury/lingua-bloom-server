@@ -93,12 +93,13 @@ async def test_ip_rate_limit_120_per_minute() -> None:
     async with _client(app) as client:
         headers = {"X-Forwarded-For": "198.51.100.10"}
 
-        # Make 120 calls to an endpoint
+        # Unauthenticated calls still count against the IP limit
+        # (middleware runs before auth, and chat turns now require a token)
         for i in range(120):
             res = await client.post(
                 "/v1/chat/turns", json={"text": "hello"}, headers=headers
             )
-            assert res.status_code == 200, f"Expected 200 on call {i+1}, got {res.status_code}"
+            assert res.status_code == 401, f"Expected 401 on call {i+1}, got {res.status_code}"
 
         # 121st call is blocked
         blocked = await client.post(
