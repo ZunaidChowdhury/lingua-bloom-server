@@ -85,7 +85,7 @@ async def test_request_uses_json_mode_temperature_and_token_cap(
     call = completions.calls[0]
     assert call["response_format"] == {"type": "json_object"}
     assert call["temperature"] == DEFAULT_TEMPERATURE == 0.6
-    assert call["max_tokens"] == DEFAULT_MAX_TOKENS == 200
+    assert call["max_tokens"] == DEFAULT_MAX_TOKENS == 600
     assert call["model"] == "test-model"
 
 

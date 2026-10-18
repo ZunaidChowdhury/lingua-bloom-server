@@ -9,6 +9,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import httpx
+import pytest
 from fastapi import FastAPI
 
 from app.core.config import Settings
@@ -249,3 +250,36 @@ async def test_no_answer_key_exposed() -> None:
         prose = _collect_prose(body)
         for word in item.answer.accepted_words:
             assert word.lower() not in prose
+
+
+@pytest.mark.parametrize(
+    "failing_llm",
+    [
+        FakeLLM(TimeoutError("timeout")),
+        FakeLLM("{not valid json"),
+        FakeLLM(
+            LLMOutput(
+                reply="You are bad. Visit http://evil.com now.",
+                suggested_mode="conversation",
+                confidence=0.9,
+                mood="neutral",
+            )
+        ),
+    ],
+    ids=["timeout", "invalid_json", "unsafe_output"],
+)
+async def test_llm_failures_return_http_200_with_fallback_true(failing_llm: FakeLLM) -> None:
+    app = _app(llm=failing_llm)
+    headers, _ = await _auth_header(app)
+    async with _client(app) as client:
+        response = await client.post(
+            "/v1/chat/turns", json={"text": "hello"}, headers=headers
+        )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["meta"]["fallback"] is True
+    assert len(body["messages"]) > 0
+    bot_reply = body["messages"][-1]["content"]
+    assert bot_reply
+    assert "bad" not in bot_reply
+    assert "http" not in bot_reply

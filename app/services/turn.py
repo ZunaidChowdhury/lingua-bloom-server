@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import json
 import logging
 import uuid
 from collections.abc import Callable
@@ -9,7 +11,7 @@ from datetime import UTC, datetime
 from time import perf_counter
 from typing import Any, Literal, cast
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 from app.core.config import Settings
 from app.core.errors import InvalidInputError, NotFoundError
@@ -46,10 +48,10 @@ from app.domain.sel import (
     FeelingCheckin,
     checkin_due,
     feeling_checkin,
-    support_steps,
 )
 from app.fallbacks.templates import Event, pick_template
 from app.llm import LLMClient, build_context, build_messages
+from app.llm.client import LLMUnavailable
 from app.repositories.base import (
     AttemptResultName,
     ModeName,
@@ -237,16 +239,36 @@ class TurnService:
                 request_id=request_id,
             )
 
-        # Attempt branch: a pending item plus any text or choice is an attempt.
+        # Mode decision from deterministic signals and pacing.
+        signals = detect_signals(clean_text)
+
+        # Attempt branch: a pending item plus any text or choice is an attempt,
+        # UNLESS the child expresses support needs or engagement requests via text.
         attempt_action: str | None = None
         attempt_result: AttemptResult | None = None
         item: Item | None = None
         level_at_attempt = level
         decision: AttemptDecision | None = None
+        chosen_label: str | None = None
 
-        is_attempt = pending_item_id is not None and (
-            command.choice_id is not None or text_present
-        )
+        is_attempt = pending_item_id is not None and command.choice_id is not None
+        if pending_item_id is not None and command.choice_id is None and text_present:
+            is_correct_answer = False
+            item_peek = get_item_by_id(pending_item_id)
+            if item_peek is not None and item_peek.answer and item_peek.answer.accepted_words:
+                norm = clean_text.strip().lower()
+                if norm in [w.lower() for w in item_peek.answer.accepted_words]:
+                    is_correct_answer = True
+
+            if not is_correct_answer and (
+                signals.support or signals.wants_story or signals.wants_play
+            ):
+                is_attempt = False
+                pending_item_id = None
+                pending_attempts = 0
+            else:
+                is_attempt = True
+
         if is_attempt:
             assert pending_item_id is not None
             item = get_item_by_id(pending_item_id)
@@ -255,6 +277,14 @@ class TurnService:
                 pending_attempts = 0
                 is_attempt = False
             else:
+                if command.choice_id is not None and item.choices:
+                    chosen_choice = next(
+                        (c for c in item.choices if c.id == command.choice_id), None
+                    )
+                    if chosen_choice:
+                        chosen_label = chosen_choice.label
+                        if not clean_text:
+                            clean_text = chosen_label
                 try:
                     attempt_result = check_answer(item, command.choice_id, clean_text or None)
                 except UnknownChoiceError as exc:
@@ -263,7 +293,11 @@ class TurnService:
                 attempt_action = decision.action
                 level_at_attempt = state.session.level
 
-                if decision.clears_pending:
+                if command.choice_id is not None:
+                    # When tapping an option, advance to next question
+                    pending_item_id = None
+                    pending_attempts = 0
+                elif decision.clears_pending:
                     pending_item_id = None
                     pending_attempts = 0
                 else:
@@ -279,12 +313,14 @@ class TurnService:
                 )
                 feedback = self._attempt_feedback(attempt_result, decision, item, seed)
 
-        # Mode decision from deterministic signals and pacing.
-        signals = detect_signals(clean_text)
         has_pending_attempt = pending_item_id is not None and pending_attempts > 0
-        mode_decision = decide_mode(
-            signals, has_pending_attempt, learning_streak, self._settings
-        )
+        if command.choice_id is not None:
+            # Child tapped an option in a quiz: stay in learning mode to show the next question
+            mode_decision = ModeDecision("learning", ("learning",), True)
+        else:
+            mode_decision = decide_mode(
+                signals, has_pending_attempt, learning_streak, self._settings
+            )
 
         # Progression: evaluate after the attempt (or report the existing window).
         counted = self._counted_attempts(state)
@@ -319,6 +355,9 @@ class TurnService:
                 mode_decision=mode_decision,
                 attempt_action=attempt_action,
                 attempt_result=attempt_result,
+                item=item,
+                chosen_label=chosen_label,
+                is_attempt=is_attempt,
                 signals_support=signals.support,
                 signals_wants_learning=signals.wants_learning,
                 leveled_up=leveled_up,
@@ -327,7 +366,7 @@ class TurnService:
                 seed=seed,
                 nickname=nickname,
             )
-            if not reply and feedback:
+            if not reply and feedback and attempt_action in ("hint", "reveal"):
                 reply = feedback
 
         # Attach the next learning item when pacing allows it.
@@ -381,6 +420,9 @@ class TurnService:
         mode_decision: ModeDecision,
         attempt_action: str | None,
         attempt_result: AttemptResult | None,
+        item: Item | None = None,
+        chosen_label: str | None = None,
+        is_attempt: bool = False,
         signals_support: bool,
         signals_wants_learning: bool,
         leveled_up: bool,
@@ -395,6 +437,10 @@ class TurnService:
             reply = pick_template("learning", level, "level_up", seed, nickname)
             return reply, self._concrete(mode_decision.mode), False, 0
 
+        if not is_attempt and signals_wants_learning and not leveled_up:
+            # On learning start, only show questions with options (no repeated message)
+            return "", "learning", False, 0
+
         if attempt_action == "hint" or attempt_action == "reveal":
             # The canonical hint/reveal text is returned via `feedback`.
             return "", self._concrete(mode_decision.mode), False, 0
@@ -407,9 +453,45 @@ class TurnService:
             reply = pick_template("learning", level, "break_offer", seed, nickname)
             return reply, "conversation", False, 0
 
-        if signals_support and mode_decision.mode == "support":
-            playbook = support_steps(level)
-            return f"{playbook.acknowledge} {playbook.gentle_step}", "support", False, 0
+        if attempt_result is not None and item is not None and (chosen_label or clean_text):
+            answer_label = chosen_label or clean_text
+            if attempt_result.correct:
+                prompt_text = (
+                    f'Child answered "{item.prompt}" with "{answer_label}". {item.reveal} '
+                    "Praise enthusiastically in short words (under 8 words). Never say wrong."
+                )
+            else:
+                prompt_text = (
+                    f'Child answered "{item.prompt}" with "{answer_label}". Answer: {item.reveal} '
+                    "Encourage effort kindly and say the answer (under 8 words). Never say wrong."
+                )
+            attempt_msgs = build_messages(
+                build_context(state), "learning", ("learning",), prompt_text
+            )
+            started = perf_counter()
+            try:
+                output = await self._llm.complete(attempt_msgs)
+                llm_ms = int((perf_counter() - started) * 1000)
+                ok, attempt_reasons = validate_reply(output.reply, level)
+                if ok and output.reply.strip():
+                    return output.reply, "learning", False, llm_ms
+                self._log_fallback_reason("validation", attempt_reasons)
+            except Exception as exc:
+                llm_ms = int((perf_counter() - started) * 1000)
+                logger.warning("llm_call_failed")
+                self._log_fallback_reason(exc)
+
+            return self._fallback_reply(
+                mode_decision,
+                attempt_action,
+                attempt_result,
+                item,
+                signals_support,
+                level,
+                seed,
+                nickname,
+                clean_text,
+            )
 
         messages: list[dict[str, Any]] = build_messages(
             build_context(state), mode_decision.mode, mode_decision.allowed_modes, clean_text
@@ -418,31 +500,35 @@ class TurnService:
         try:
             output = await self._llm.complete(messages)
             llm_ms = int((perf_counter() - started) * 1000)
-        except Exception:
+        except Exception as exc:
             llm_ms = int((perf_counter() - started) * 1000)
             logger.warning("llm_call_failed")
+            self._log_fallback_reason(exc)
             return self._fallback_reply(
                 mode_decision,
                 attempt_action,
                 attempt_result,
+                item,
                 signals_support,
-                turn_count,
                 level,
                 seed,
                 nickname,
+                clean_text,
             )
 
-        ok, _reasons = validate_reply(output.reply, level)
-        if not ok:
+        ok, reasons = validate_reply(output.reply, level)
+        if not ok or not output.reply.strip():
+            self._log_fallback_reason("validation", reasons)
             return self._fallback_reply(
                 mode_decision,
                 attempt_action,
                 attempt_result,
+                item,
                 signals_support,
-                turn_count,
                 level,
                 seed,
                 nickname,
+                clean_text,
             )
 
         if mode_decision.mode == "auto":
@@ -457,33 +543,72 @@ class TurnService:
             final_mode = mode_decision.mode
         return output.reply, final_mode, False, llm_ms
 
+    def _log_fallback_reason(
+        self, exc_or_type: Exception | str, reasons: list[str] | None = None
+    ) -> None:
+        if isinstance(exc_or_type, LLMUnavailable):
+            if exc_or_type.reason == "api_error" and exc_or_type.detail:
+                logger.info("fallback_reason=api_error error_class=%s", exc_or_type.detail)
+            else:
+                logger.info("fallback_reason=%s", exc_or_type.reason)
+        elif isinstance(exc_or_type, (TimeoutError, asyncio.TimeoutError)) or (
+            isinstance(exc_or_type, Exception) and "timeout" in str(exc_or_type).lower()
+        ):
+            logger.info("fallback_reason=timeout")
+        elif isinstance(exc_or_type, json.JSONDecodeError) or (
+            isinstance(exc_or_type, ValueError) and "json" in str(exc_or_type).lower()
+        ):
+            logger.info("fallback_reason=invalid_json")
+        elif isinstance(exc_or_type, ValidationError):
+            logger.info("fallback_reason=schema_mismatch")
+        elif isinstance(exc_or_type, Exception):
+            logger.info("fallback_reason=api_error error_class=%s", type(exc_or_type).__name__)
+        elif exc_or_type == "validation":
+            r = reasons or []
+            if "reading_level" in r:
+                logger.info("fallback_reason=reading_level")
+            else:
+                logger.info("fallback_reason=unsafe_output")
+        else:
+            logger.info("fallback_reason=%s", exc_or_type)
+
     def _fallback_reply(
         self,
         mode_decision: ModeDecision,
         attempt_action: str | None,
         attempt_result: AttemptResult | None,
+        item: Item | None,
         signals_support: bool,
-        turn_count: int,
         level: int,
         seed: int,
         nickname: str | None,
+        clean_text: str = "",
     ) -> tuple[str, Mode, bool, int]:
-        if attempt_action == "advance":
+        if attempt_action == "advance" or attempt_result is not None:
             final_mode: Mode = "learning"
         else:
             final_mode = self._concrete(mode_decision.mode)
         if attempt_result is not None and attempt_result.reason == "correct":
-            event: Event = "correct"
-            template_mode: Mode = "learning"
+            if item is not None and item.reveal:
+                reply = f"Yes! {item.reveal}"
+            else:
+                reply = pick_template("learning", level, "correct", seed, nickname)
+            return reply, "learning", True, 0
         elif attempt_result is not None:
-            event = "incorrect"
-            template_mode = "learning"
+            if item is not None and item.reveal:
+                reply = f"Good try! {item.reveal}"
+            else:
+                reply = pick_template("learning", level, "incorrect", seed, nickname)
+            return reply, "learning", True, 0
         elif signals_support or final_mode == "support":
-            event = "support"
-            template_mode = "support"
-        elif turn_count == 0:
-            event = "greeting"
-            template_mode = final_mode
+            event: Event = "support"
+            template_mode: Mode = "support"
+        elif final_mode == "engagement":
+            event = "story" if "story" in clean_text.lower() else "engagement"
+            template_mode = "engagement"
+        elif final_mode == "conversation":
+            event = "conversation"
+            template_mode = "conversation"
         else:
             event = "generic"
             template_mode = final_mode

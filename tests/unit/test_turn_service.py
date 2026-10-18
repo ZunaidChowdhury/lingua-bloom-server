@@ -12,8 +12,10 @@ from app.core.config import Settings
 from app.core.errors import InvalidInputError
 from app.core.tokens import generate_token, hash_token
 from app.domain.curriculum.loader import get_item_by_id
+from app.domain.safety import validate_reply
 from app.domain.sel import FEELINGS
 from app.llm import FakeLLM, LLMOutput
+from app.llm.client import LLMUnavailable
 from app.repositories.base import (
     NewSession,
     Repository,
@@ -213,7 +215,7 @@ async def test_four_modes_are_reachable() -> None:
     session = await _make_session(repo)
     outcome = await service.run(session, TurnCommand(text="i sad"))
     assert outcome.mode == "support"
-    assert len(llm.calls) == calls_before
+    assert len(llm.calls) == calls_before + 1
 
 
 async def test_pacing_caps_consecutive_learning_turns() -> None:
@@ -238,13 +240,57 @@ async def test_explicit_learning_request_beats_pacing_cap() -> None:
 
 async def test_sad_routes_to_support() -> None:
     repo = InMemoryRepository()
-    service = _service(repo, SpyLLM())
+    support_llm = SpyLLM(
+        LLMOutput(
+            reply="I am here with you. Take one slow breath. Want to rest, chat, or play?",
+            suggested_mode="support",
+            confidence=0.95,
+            mood="low",
+        )
+    )
+    service = _service(repo, support_llm)
     session = await _make_session(repo)
 
     outcome = await service.run(session, TurnCommand(text="i sad"))
     assert outcome.mode == "support"
     assert outcome.activity is None
     assert "I am here with you." in outcome.messages[-1].content
+
+
+async def test_sad_with_pending_quiz_routes_to_support_and_clears_quiz() -> None:
+    repo = InMemoryRepository()
+    support_llm = SpyLLM(
+        LLMOutput(
+            reply="I am here with you. Take one slow breath. Want to rest, chat, or play?",
+            suggested_mode="support",
+            confidence=0.95,
+            mood="low",
+        )
+    )
+    service = _service(repo, support_llm)
+    session = await _make_session(repo)
+
+    # First turn: start learning so an item is pending
+    turn1 = await service.run(session, TurnCommand(text="quiz me"))
+    assert turn1.mode == "learning"
+    assert turn1.activity is not None
+
+    state1 = await repo.get_turn_state(session.id)
+    assert state1 is not None and state1.session.pending_item_id is not None
+
+    # Second turn: child expresses sadness while quiz options are showing
+    outcome = await service.run(session, TurnCommand(text="i am sad"))
+    assert outcome.mode == "support"
+    assert outcome.activity is None
+    assert outcome.feedback is None
+    assert outcome.result is None
+    assert "I am here with you." in outcome.messages[-1].content
+
+    state2 = await repo.get_turn_state(session.id)
+    assert state2 is not None
+    assert state2.session.pending_item_id is None
+    assert state2.session.pending_attempts == 0
+    assert len(state2.recent_attempts) == 0
 
 
 async def test_llm_garbage_does_not_change_scores() -> None:
@@ -288,29 +334,65 @@ async def test_llm_garbage_does_not_change_scores() -> None:
 
 
 @pytest.mark.parametrize(
-    "llm",
+    ("llm", "expected_reason"),
     [
-        FakeLLM(Exception("timeout")),
-        FakeLLM("{this is not json"),
-        FakeLLM(
-            LLMOutput(
-                reply="You are bad. Visit http://evil.com now.",
-                suggested_mode="conversation",
-                confidence=0.9,
-                mood="neutral",
-            )
+        (FakeLLM(TimeoutError("timeout")), "timeout"),
+        (FakeLLM("{this is not json"), "invalid_json"),
+        (FakeLLM(LLMUnavailable("output not valid", reason="schema_mismatch")), "schema_mismatch"),
+        (
+            FakeLLM(
+                LLMOutput(
+                    reply="You are bad. Visit http://evil.com now.",
+                    suggested_mode="conversation",
+                    confidence=0.9,
+                    mood="neutral",
+                )
+            ),
+            "unsafe_output",
+        ),
+        (
+            FakeLLM(
+                LLMOutput(
+                    reply=(
+                        "This is an extremely long and overly complex sentence "
+                        "that far exceeds the reading limit of children."
+                    ),
+                    suggested_mode="conversation",
+                    confidence=0.9,
+                    mood="neutral",
+                )
+            ),
+            "reading_level",
         ),
     ],
-    ids=["timeout", "invalid_json", "unsafe"],
+    ids=["timeout", "invalid_json", "schema_mismatch", "unsafe", "reading_level"],
 )
-async def test_fallback_on_failure_or_unsafe_output(llm: FakeLLM) -> None:
+async def test_fallback_on_failure_or_unsafe_output(
+    llm: FakeLLM, expected_reason: str, caplog: pytest.LogCaptureFixture
+) -> None:
+    import logging
+
     repo = InMemoryRepository()
     service = _service(repo, llm)
     session = await _make_session(repo)
 
-    outcome = await service.run(session, TurnCommand(text="hello"))
+    with caplog.at_level(logging.INFO):
+        outcome = await service.run(session, TurnCommand(text="hello"))
     assert outcome.meta.fallback is True
     assert outcome.messages[-1].content
+    ok, _ = validate_reply(outcome.messages[-1].content, 1)
+    assert ok is True
+    assert f"fallback_reason={expected_reason}" in caplog.text
+
+
+async def test_valid_fake_llm_reply_returns_fallback_false() -> None:
+    repo = InMemoryRepository()
+    service = _service(repo, FakeLLM(GOOD_LLM))
+    session = await _make_session(repo)
+
+    outcome = await service.run(session, TurnCommand(text="hello"))
+    assert outcome.meta.fallback is False
+    assert outcome.messages[-1].content == GOOD_LLM.reply
 
 
 async def test_pii_redacted_before_prompt_and_storage() -> None:
@@ -404,3 +486,45 @@ async def test_empty_command_rejected() -> None:
 
     with pytest.raises(InvalidInputError):
         await service.run(session, TurnCommand())
+
+
+async def test_lets_learn_shows_four_options_and_no_redundant_reply() -> None:
+    repo = InMemoryRepository()
+    service = _service(repo, SpyLLM())
+    session = await _make_session(repo)
+
+    outcome = await service.run(session, TurnCommand(text="lets learn"))
+    assert outcome.activity is not None
+    assert outcome.activity.type == "choice"
+    assert len(outcome.activity.choices) == 4
+    # Quiet lead-in: reply is empty so child sees only the quiz card with options
+    assert outcome.messages[-1].role == "bot"
+    assert outcome.messages[-1].content == ""
+
+
+async def test_tapping_choice_gives_feedback_and_auto_advances() -> None:
+    repo = InMemoryRepository()
+    service = _service(repo, SpyLLM())
+    session = await _make_session(repo)
+
+    start_outcome = await service.run(session, TurnCommand(text="lets learn"))
+    assert start_outcome.activity is not None
+    assert len(start_outcome.activity.choices) == 4
+
+    # Tap the first choice
+    chosen = start_outcome.activity.choices[0]
+    next_outcome = await service.run(session, TurnCommand(choice_id=chosen.id))
+
+    # Child message recorded the choice label
+    assert next_outcome.messages[-2].role == "child"
+    assert next_outcome.messages[-2].content == chosen.label
+
+    # Bot replied with feedback on the attempt
+    assert next_outcome.messages[-1].role == "bot"
+    assert len(next_outcome.messages[-1].content) > 0
+
+    # Auto-advanced to next question with 4 options
+    assert next_outcome.activity is not None
+    assert next_outcome.activity.type == "choice"
+    assert len(next_outcome.activity.choices) == 4
+
