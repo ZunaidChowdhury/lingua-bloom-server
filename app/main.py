@@ -57,6 +57,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         model=resolved.groq_model,
         timeout_s=resolved.llm_timeout_s,
     )
+    await app.state.llm.warmup()
     app.state.pool = await _open_pool(resolved)
     try:
         yield

@@ -11,10 +11,19 @@ import pytest
 from fastapi import FastAPI
 
 from app.core.config import Settings
+from app.llm.client import GroqClient
 from app.main import create_app
 
 ALLOWED = "http://localhost:3000"
 UNREACHABLE_DSN = "postgresql://invalid:invalid@127.0.0.1:1/invalid"
+
+
+@pytest.fixture(autouse=True)
+def _no_llm_warmup(monkeypatch: pytest.MonkeyPatch) -> None:
+    async def _noop(self: object) -> None:
+        return None
+
+    monkeypatch.setattr(GroqClient, "warmup", _noop)
 
 
 class FakePool:

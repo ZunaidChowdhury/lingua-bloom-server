@@ -52,7 +52,20 @@ async def create_turn(payload: TurnRequest, request: Request) -> TurnResponse:
     try:
         if llm is None:
             raise RuntimeError("llm client is not available")
-        content = await llm.reply(payload.text)
+        output = await llm.complete(
+            [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are Bloom, a kind friend for young children. "
+                        "Reply as JSON with keys reply (one short sentence), "
+                        "suggested_mode (conversation), confidence (0.9), mood (positive)."
+                    ),
+                },
+                {"role": "user", "content": payload.text},
+            ]
+        )
+        content = output.reply
     except Exception:
         content = FALLBACK_REPLY
         fallback = True

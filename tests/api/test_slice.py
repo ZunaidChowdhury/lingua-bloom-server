@@ -1,22 +1,33 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from typing import Any
 
 import httpx
 from fastapi import FastAPI
 
 from app.api.routes.slice import FALLBACK_REPLY
 from app.core.config import Settings
+from app.llm.schema import LLMOutput
 from app.main import create_app
 
 
 class FakeLLM:
-    def __init__(self, result: str | Exception) -> None:
+    def __init__(self, result: LLMOutput | Exception) -> None:
         self._result = result
 
-    async def reply(self, text: str) -> str:
+    async def complete(self, messages: list[dict[str, Any]]) -> LLMOutput:
         if isinstance(self._result, Exception):
             raise self._result
         return self._result
+
+
+def _output(reply: str) -> LLMOutput:
+    return LLMOutput.model_construct(
+        reply=reply,
+        suggested_mode="conversation",
+        confidence=0.9,
+        mood="positive",
+    )
 
 
 def _settings() -> Settings:
@@ -41,7 +52,7 @@ def _app_with(llm: FakeLLM) -> FastAPI:
 
 
 async def test_returns_bot_message_and_meta() -> None:
-    app = _app_with(FakeLLM("Hi friend!"))
+    app = _app_with(FakeLLM(_output("Hi friend!")))
     async with _client(app) as client:
         response = await client.post("/v1/chat/turns", json={"text": "hello"})
     assert response.status_code == 200
@@ -53,7 +64,7 @@ async def test_returns_bot_message_and_meta() -> None:
 
 
 async def test_reply_is_truncated_to_max_chars() -> None:
-    app = _app_with(FakeLLM("a" * 500))
+    app = _app_with(FakeLLM(_output("a" * 500)))
     async with _client(app) as client:
         response = await client.post("/v1/chat/turns", json={"text": "hello"})
     content = response.json()["messages"][0]["content"]
@@ -81,7 +92,7 @@ async def test_timeout_returns_fallback() -> None:
 
 
 async def test_text_over_limit_is_422() -> None:
-    app = _app_with(FakeLLM("ok"))
+    app = _app_with(FakeLLM(_output("ok")))
     async with _client(app) as client:
         response = await client.post("/v1/chat/turns", json={"text": "x" * 201})
     assert response.status_code == 422
