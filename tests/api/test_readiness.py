@@ -15,7 +15,7 @@ from app.llm.client import GroqClient
 from app.main import create_app
 
 ALLOWED = "http://localhost:3000"
-UNREACHABLE_DSN = "postgresql://invalid:invalid@127.0.0.1:1/invalid"
+UNREACHABLE_DSN = "postgresql://invalid:invalid@127.0.0.1:1/invalid"  # scan-secrets: allow
 
 
 @pytest.fixture(autouse=True)
