@@ -17,6 +17,7 @@ from app.api.routes.progress import router as progress_router
 from app.api.routes.sessions import router as sessions_router
 from app.core.config import Settings, get_settings
 from app.core.errors import register_exception_handlers
+from app.core.locks import SessionLocks
 from app.core.logging import configure_logging
 from app.core.middleware import RequestContextMiddleware
 from app.core.rate_limit import (
@@ -86,6 +87,7 @@ def create_app(
     app.state.rate_session_create = SlidingWindowLimiter(
         DEFAULT_SESSION_CREATE_LIMIT, DEFAULT_SESSION_CREATE_WINDOW, clock=clock
     )
+    app.state.session_locks = SessionLocks()
 
     app.add_middleware(RateLimitMiddleware)
     app.add_middleware(RequestContextMiddleware)

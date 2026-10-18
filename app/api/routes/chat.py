@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, Request
+import asyncpg
+from fastapi import APIRouter, Depends, Request, Response
 from pydantic import BaseModel, Field, model_validator
 
 from app.api.deps import get_current_session, get_repository
 from app.core.config import Settings
+from app.core.errors import ServiceUnavailableError
+from app.core.locks import SessionLocks
 from app.core.rate_limit import SlidingWindowLimiter
 from app.domain.curriculum.models import PublicItem
 from app.domain.sel import FeelingCheckin
@@ -25,6 +29,8 @@ from app.services.turn import (
     TurnOutcome,
     TurnService,
 )
+
+logger = logging.getLogger("app.turn")
 
 router = APIRouter(prefix="/v1/chat", tags=["chat"])
 
@@ -67,11 +73,12 @@ class TurnResponse(BaseModel):
     meta: TurnMeta
 
 
-def _to_command(payload: TurnRequest) -> TurnCommand:
+def _to_command(payload: TurnRequest, request_id: str) -> TurnCommand:
     return TurnCommand(
         text=payload.text or "",
         choice_id=payload.choice_id,
         feeling=payload.feeling,
+        request_id=request_id,
     )
 
 
@@ -102,6 +109,7 @@ async def _map_messages(
 async def create_turn(
     payload: TurnRequest,
     request: Request,
+    response: Response,
     session: Annotated[SessionRecord, Depends(get_current_session)],
     repository: Annotated[Repository, Depends(get_repository)],
 ) -> TurnResponse:
@@ -113,9 +121,33 @@ async def create_turn(
 
     settings: Settings = request.app.state.settings
     service = TurnService(repository, request.app.state.llm, settings)
-    outcome = await service.run(session, _to_command(payload))
+    locks: SessionLocks = request.app.state.session_locks
+    try:
+        async with locks.hold(str(session.id)):
+            outcome = await service.run(
+                session, _to_command(payload, request.state.request_id)
+            )
+            messages = await _map_messages(repository, session, outcome)
+    except (asyncpg.PostgresError, OSError) as exc:
+        raise ServiceUnavailableError() from exc
 
-    messages = await _map_messages(repository, session, outcome)
+    response.headers["Server-Timing"] = (
+        f"llm;dur={outcome.meta.llm_ms}, total;dur={outcome.meta.total_ms}"
+    )
+    logger.info(
+        "turn",
+        extra={
+            "request_id": request.state.request_id,
+            "route": "/v1/chat/turns",
+            "status": 200,
+            "total_ms": outcome.meta.total_ms,
+            "llm_ms": outcome.meta.llm_ms,
+            "mode": outcome.mode,
+            "level": outcome.level,
+            "fallback": outcome.meta.fallback,
+        },
+    )
+
     return TurnResponse(
         messages=messages,
         mode=outcome.mode,

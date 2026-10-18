@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Annotated, cast
 
+import asyncpg
 from fastapi import Depends, Header, Request
 
 from app.core.errors import ServiceUnavailableError, UnauthorizedError
@@ -47,12 +48,15 @@ async def get_current_session(
     """
 
     token = parse_bearer(authorization)
-    session = await repository.get_by_token_hash(hash_token(token))
-    now = datetime.now(UTC)
-    if session is None:
-        raise UnauthorizedError()
-    if session.expires_at <= now:
-        await repository.delete_session(session.id)
-        raise UnauthorizedError()
-    await repository.touch_last_active(session.id, now)
+    try:
+        session = await repository.get_by_token_hash(hash_token(token))
+        now = datetime.now(UTC)
+        if session is None:
+            raise UnauthorizedError()
+        if session.expires_at <= now:
+            await repository.delete_session(session.id)
+            raise UnauthorizedError()
+        await repository.touch_last_active(session.id, now)
+    except (asyncpg.PostgresError, OSError) as exc:
+        raise ServiceUnavailableError() from exc
     return session

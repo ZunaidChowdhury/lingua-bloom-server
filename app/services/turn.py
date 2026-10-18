@@ -74,6 +74,7 @@ class TurnCommand(BaseModel):
     text: str = Field(default="", max_length=200)
     choice_id: str | None = None
     feeling: str | None = None
+    request_id: str | None = None
 
 
 class TurnMessageOut(BaseModel):
@@ -149,7 +150,7 @@ class TurnService:
         """Execute the ARCH 5 pipeline and persist exactly one turn transaction."""
 
         started = perf_counter()
-        request_id = uuid.uuid4().hex
+        request_id = command.request_id or uuid.uuid4().hex
 
         state = await self._repository.get_turn_state(session.id)
         if state is None:
