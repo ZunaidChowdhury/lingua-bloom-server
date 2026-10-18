@@ -14,13 +14,19 @@ from app.repositories.base import Repository, SessionRecord
 from app.repositories.postgres import PostgresRepository
 
 
-def get_repository(request: Request) -> Repository:
+async def get_repository(request: Request) -> Repository:
     """Return the configured repository, or build one from the pool."""
 
     configured = getattr(request.app.state, "repository", None)
     if configured is not None:
         return cast(Repository, configured)
     pool = getattr(request.app.state, "pool", None)
+    if pool is None:
+        from app.main import _open_pool
+
+        pool = await _open_pool(request.app.state.settings)
+        if pool is not None:
+            request.app.state.pool = pool
     if pool is None:
         raise ServiceUnavailableError()
     repository = PostgresRepository(pool)

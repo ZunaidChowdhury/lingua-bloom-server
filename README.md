@@ -262,3 +262,12 @@ GitHub: [@ZunaidChowdhury](https://github.com/ZunaidChowdhury)
 ## ⭐ Star the Project
 
 If you find LinguaBloom helpful or inspiring, please give the repositories a star! 🌟
+
+---
+
+## 📸 Preview
+
+<div align="center">
+  <img src="./lingua-bloom-chat.png" width="100%" alt="LinguaBloom Chat Interface" />
+</div>
+

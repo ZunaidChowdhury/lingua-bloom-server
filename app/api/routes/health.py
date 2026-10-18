@@ -8,7 +8,7 @@ from app.core.errors import ServiceUnavailableError
 
 router = APIRouter()
 
-READY_TIMEOUT_S = 1.0
+READY_TIMEOUT_S = 3.0
 
 
 @router.get("/health")
@@ -19,6 +19,12 @@ async def health() -> dict[str, str]:
 @router.get("/health/ready")
 async def ready(request: Request) -> dict[str, str]:
     pool = getattr(request.app.state, "pool", None)
+    if pool is None:
+        from app.main import _open_pool
+
+        pool = await _open_pool(request.app.state.settings)
+        if pool is not None:
+            request.app.state.pool = pool
     if pool is None:
         raise ServiceUnavailableError()
     try:

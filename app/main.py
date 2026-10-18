@@ -47,7 +47,11 @@ async def _open_pool(settings: Settings) -> asyncpg.Pool | None:
             command_timeout=settings.db_command_timeout_s,
         )
     except (OSError, asyncpg.PostgresError, ValueError) as exc:
-        logger.warning("database pool unavailable at startup: %s", type(exc).__name__)
+        logger.warning(
+            "database pool unavailable at startup: %s (%s)",
+            type(exc).__name__,
+            exc,
+        )
         return None
 
 
